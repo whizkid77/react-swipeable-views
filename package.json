@@ -1,5 +1,6 @@
 {
   "name": "SwipeableViewsDocs",
+  "version": 0.0.1,
   "privte": true,
   "scripts": {
     "lint": "eslint . && echo \"eslint: no lint errors\"",

@@ -852,7 +852,33 @@ class SwipeableViews extends Component {
       }
     }
 
-    const transform = axisProperties.transform[axis](indexCurrent * 90);
+      let targetTransform = indexCurrent * 90;
+      if (this.props.children.length == 2) {
+          switch(indexCurrent) {
+              case 0:
+                  targetTransform = 0;
+                  break;
+              case 1:
+                  targetTransform = 80; //90 * 2 - 100
+                  break;
+          }
+      }
+      if (this.props.children.length == 3) {
+          switch(indexCurrent) {
+              case 0:
+                  targetTransform = 0;
+                  break;
+              case 1:
+                  targetTransform = 80; //90 * 2 - 100
+                  break;
+              case 2:
+                  targetTransform = 170; //90 * 3 - 100
+                  break;
+          }
+      }        
+
+      const transform = axisProperties.transform[axis](targetTransform);
+
     const containerStyle = {
       WebkitTransform: transform,
       transform,

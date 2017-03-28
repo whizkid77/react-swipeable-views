@@ -505,6 +505,30 @@ class SwipeableViews extends Component {
         parseInt(rootStyle.paddingLeft, 10) -
         parseInt(rootStyle.paddingRight, 10)
       );
+
+        /* Special hardcode for Hashed */
+        if (this.props.children.length == 2) {
+            /*                                                                                                                  
+               Interpolate                                                                                                      
+               0 => 0                                                                                                           
+               -(viewlength * .9 * 2 - viewlength)) => 1                                                                        
+             */
+            this.startIndex = -tranformNormalized.pageX / (this.viewLength * .8)
+        }
+        if (this.props.children.length == 3) {
+            /*                                                                                                                  
+               Interpolate                                                                                                      
+               0 => 0                                                                                                           
+               -.8 * viewlength => 1                                                                                            
+               -1.7 * viewlength => 2                                                                                           
+             */
+            if (-tranformNormalized.pageX < 0.8 * this.viewLength) {
+                this.startIndex = -tranformNormalized.pageX / (this.viewLength * .8)
+            } else {
+                this.startIndex = (-tranformNormalized.pageX - this.viewLength * .8) / (this.viewLength * 0.9) + 1
+            }
+        }
+        /* END Special hardcode for Hashed */
     }
   };
 
@@ -851,31 +875,32 @@ class SwipeableViews extends Component {
         WebkitTransition += additionalTranstion;
       }
     }
-
+      
+      /* SPECIAL HARDCODE FOR HASHED */
       let targetTransform = indexCurrent * 90;
       if (this.props.children.length == 2) {
-          switch(indexCurrent) {
-              case 0:
-                  targetTransform = 0;
-                  break;
-              case 1:
-                  targetTransform = 80; //90 * 2 - 100
-                  break;
-          }
+          /*
+             Interpolate:
+             0 => 0
+             1 => 80
+           */
+          targetTransform = indexCurrent * 80;
       }
       if (this.props.children.length == 3) {
-          switch(indexCurrent) {
-              case 0:
-                  targetTransform = 0;
-                  break;
-              case 1:
-                  targetTransform = 80; //90 * 2 - 100
-                  break;
-              case 2:
-                  targetTransform = 170; //90 * 3 - 100
-                  break;
+          /*
+             Interpolate:
+             0 => 0
+             1 => 80
+             2 => 170
+           */
+          if (indexCurrent < 1) {
+              targetTransform = indexCurrent * 80;
           }
-      }        
+          else if (indexCurrent >= 1) {
+              targetTransform = (indexCurrent - 1) * 90 + 80;
+          }
+      }
+      /* END SPECIAL HARDCODE FOR HASHED */
 
       const transform = axisProperties.transform[axis](targetTransform);
 
